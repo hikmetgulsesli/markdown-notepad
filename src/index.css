@@ -1,0 +1,45 @@
+/* Additional global styles - tokens.css handles base styles */
+
+/* Focus visible styles */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-alt);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-dark);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: var(--surface-dark-alt);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-inverse-muted);
+}
