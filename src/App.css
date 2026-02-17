@@ -12,6 +12,8 @@
   background-color: var(--surface-elevated);
   border-bottom: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
+  height: 73px;
+  flex-shrink: 0;
 }
 
 .logo {
@@ -63,74 +65,14 @@
 
 .main {
   flex: 1;
-  padding: var(--space-2xl);
-}
-
-.welcome {
-  max-width: 64rem;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.welcome h2 {
-  font-size: var(--text-3xl);
-  margin-bottom: var(--space-md);
-  color: var(--text);
-}
-
-.welcome > p {
-  font-size: var(--text-lg);
-  color: var(--text-muted);
-  margin-bottom: var(--space-2xl);
-}
-
-.features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: var(--space-xl);
-  margin-top: var(--space-2xl);
-}
-
-.feature-card {
-  padding: var(--space-xl);
-  background-color: var(--surface-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.feature-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.feature-card h3 {
-  font-size: var(--text-lg);
-  margin-bottom: var(--space-sm);
-  color: var(--primary);
-}
-
-.feature-card p {
-  color: var(--text-muted);
-  line-height: 1.6;
+  overflow: hidden;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .header {
     padding: var(--space-md);
-  }
-  
-  .main {
-    padding: var(--space-lg);
-  }
-  
-  .welcome h2 {
-    font-size: var(--text-2xl);
-  }
-  
-  .features {
-    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 60px;
   }
 }

@@ -8,21 +8,36 @@ describe('App', () => {
     expect(screen.getByText('Markdown Notepad')).toBeInTheDocument()
   })
 
-  it('renders the welcome message', () => {
+  it('renders the editor layout', () => {
     render(<App />)
-    expect(screen.getByText('Welcome to Markdown Notepad')).toBeInTheDocument()
+    expect(screen.getByTestId('editor-layout')).toBeInTheDocument()
+    expect(screen.getByTestId('editor-pane')).toBeInTheDocument()
+    expect(screen.getByTestId('preview-pane')).toBeInTheDocument()
   })
 
-  it('renders feature cards', () => {
+  it('renders editor and preview pane headers', () => {
     render(<App />)
-    expect(screen.getByText('Live Preview')).toBeInTheDocument()
-    expect(screen.getByText('Syntax Highlight')).toBeInTheDocument()
-    expect(screen.getByText('Local Storage')).toBeInTheDocument()
+    const paneTitles = screen.getAllByText('Editor')
+    expect(paneTitles.length).toBeGreaterThan(0)
+    expect(screen.getByText('Preview')).toBeInTheDocument()
   })
 
   it('renders theme toggle button', () => {
     render(<App />)
     const themeToggle = screen.getByRole('button', { name: /switch to/i })
     expect(themeToggle).toBeInTheDocument()
+  })
+
+  it('renders markdown editor textarea', () => {
+    render(<App />)
+    const editor = screen.getByRole('textbox', { name: /markdown editor/i })
+    expect(editor).toBeInTheDocument()
+  })
+
+  it('renders resizable divider', () => {
+    render(<App />)
+    const divider = screen.getByRole('separator')
+    expect(divider).toBeInTheDocument()
+    expect(divider).toHaveAttribute('aria-orientation', 'vertical')
   })
 })

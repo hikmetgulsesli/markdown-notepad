@@ -1,17 +1,69 @@
+import { useState } from 'react'
 import { FileText, Moon, Sun } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { EditorLayout } from './components/EditorLayout'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import './App.css'
+
+const defaultMarkdown = `# Welcome to Markdown Notepad
+
+Start typing in the **editor** on the left to see the live preview on the right.
+
+## Features
+
+- Live preview as you type
+- Syntax highlighting for code blocks
+- GitHub Flavored Markdown support
+- Local storage persistence
+
+## Code Example
+
+\`\`\`javascript
+function greet(name) {
+  return \`Hello, \${name}!\`;
+}
+
+console.log(greet('World'));
+\`\`\`
+
+## Lists
+
+### Unordered
+- First item
+- Second item
+- Third item
+
+### Ordered
+1. First step
+2. Second step
+3. Third step
+
+> **Tip:** Drag the divider to resize the panes!
+`
 
 function App() {
   const [isDark, setIsDark] = useState(false)
+  const [markdown, setMarkdown] = useState(defaultMarkdown)
 
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [isDark])
+  const toggleTheme = () => {
+    setIsDark(!isDark)
+    document.documentElement.classList.toggle('dark')
+  }
+
+  const editor = (
+    <textarea
+      value={markdown}
+      onChange={(e) => setMarkdown(e.target.value)}
+      placeholder="Type your markdown here..."
+      aria-label="Markdown editor"
+    />
+  )
+
+  const preview = (
+    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+      {markdown}
+    </ReactMarkdown>
+  )
 
   return (
     <div className="app">
@@ -22,7 +74,7 @@ function App() {
         </div>
         <button
           className="theme-toggle"
-          onClick={() => setIsDark(!isDark)}
+          onClick={toggleTheme}
           aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {isDark ? (
@@ -33,24 +85,7 @@ function App() {
         </button>
       </header>
       <main className="main">
-        <div className="welcome">
-          <h2>Welcome to Markdown Notepad</h2>
-          <p>A clean, fast markdown editor with live preview.</p>
-          <div className="features">
-            <div className="feature-card">
-              <h3>Live Preview</h3>
-              <p>See your markdown rendered in real-time as you type.</p>
-            </div>
-            <div className="feature-card">
-              <h3>Syntax Highlight</h3>
-              <p>Beautiful code highlighting for all major languages.</p>
-            </div>
-            <div className="feature-card">
-              <h3>Local Storage</h3>
-              <p>Your notes are automatically saved to browser storage.</p>
-            </div>
-          </div>
-        </div>
+        <EditorLayout editor={editor} preview={preview} />
       </main>
     </div>
   )
