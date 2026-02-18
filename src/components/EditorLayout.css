@@ -1,0 +1,148 @@
+.editor-layout {
+  display: flex;
+  height: calc(100vh - 73px); /* Subtract header height */
+  overflow: hidden;
+}
+
+.editor-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 20%;
+  max-width: 80%;
+  background-color: var(--surface-elevated);
+  transition: none;
+}
+
+.preview-pane {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 20%;
+  max-width: 80%;
+  background-color: var(--surface);
+  transition: none;
+}
+
+.pane-header {
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--surface-alt);
+  border-bottom: 1px solid var(--border);
+}
+
+.pane-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pane-content {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-md);
+}
+
+.editor-content {
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}
+
+.preview-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+.divider {
+  width: 8px;
+  background-color: var(--surface-alt);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color var(--transition-fast);
+}
+
+.divider:hover,
+.divider:focus-visible {
+  background-color: var(--primary-light);
+}
+
+.divider:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.editor-layout.is-dragging .divider {
+  background-color: var(--primary-light);
+}
+
+.editor-layout.is-dragging {
+  cursor: col-resize;
+  user-select: none;
+}
+
+.divider-handle {
+  width: 4px;
+  height: 32px;
+  background-color: var(--border-dark);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+.divider:hover .divider-handle,
+.divider:focus-visible .divider-handle,
+.editor-layout.is-dragging .divider-handle {
+  background-color: var(--primary);
+}
+
+/* Responsive: Stack vertically on mobile */
+@media (max-width: 768px) {
+  .editor-layout {
+    flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - 73px);
+  }
+
+  .editor-pane,
+  .preview-pane {
+    width: 100% !important;
+    min-width: auto;
+    max-width: none;
+    min-height: 300px;
+  }
+
+  .divider {
+    width: 100%;
+    height: 8px;
+    cursor: row-resize;
+    flex-direction: column;
+  }
+
+  .divider-handle {
+    width: 32px;
+    height: 4px;
+  }
+
+  .editor-layout.is-dragging {
+    cursor: row-resize;
+  }
+
+  .pane-content {
+    min-height: 250px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .divider,
+  .divider-handle {
+    transition: none;
+  }
+}

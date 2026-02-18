@@ -1,0 +1,193 @@
+/* CodeBlock component styles - Custom theme matching project design */
+/* Based on highlight.js with custom colors for emerald/stone palette */
+
+.code-block-wrapper {
+  margin-bottom: var(--space-md);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-dark);
+  background-color: #0f0f0f;
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background-color: #1c1917;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.code-block-language {
+  font-family: 'JetBrains Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-inverse-muted);
+}
+
+.code-block-pre {
+  margin: 0;
+  padding: var(--space-md);
+  overflow-x: auto;
+  background-color: #0f0f0f;
+  font-family: 'JetBrains Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}
+
+.code-block-pre code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Custom highlight.js theme - Dark mode optimized for emerald/stone palette */
+.hljs {
+  color: #e7e5e4;
+  background: transparent;
+}
+
+/* Comments */
+.hljs-comment,
+.hljs-quote {
+  color: #78716c;
+  font-style: italic;
+}
+
+/* Keywords */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #f472b6;
+  font-weight: 500;
+}
+
+/* Built-in functions and types */
+.hljs-built_in,
+.hljs-type {
+  color: #22d3ee;
+}
+
+/* Strings */
+.hljs-string,
+.hljs-title,
+.hljs-section,
+.hljs-attribute,
+.hljs-literal,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-addition {
+  color: #a3e635;
+}
+
+/* Numbers and constants */
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link {
+  color: #fbbf24;
+}
+
+/* Function names */
+.hljs-function .hljs-title,
+.hljs-class .hljs-title {
+  color: #60a5fa;
+}
+
+/* Variables and parameters */
+.hljs-variable,
+.hljs-params,
+.hljs-regexp,
+.hljs-deletion {
+  color: #fca5a5;
+}
+
+/* Class names */
+.hljs-class,
+.hljs-meta {
+  color: #c4b5fd;
+}
+
+/* Operators */
+.hljs-operator,
+.hljs-tag {
+  color: #94a3b8;
+}
+
+/* XML/HTML tags */
+.hljs-tag .hljs-name {
+  color: #f472b6;
+}
+
+.hljs-tag .hljs-attr {
+  color: #7dd3fc;
+}
+
+/* Emphasis and strong */
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 700;
+}
+
+/* Diff additions/deletions */
+.hljs-addition {
+  background-color: rgba(163, 230, 53, 0.15);
+}
+
+.hljs-deletion {
+  background-color: rgba(252, 165, 165, 0.15);
+}
+
+/* Scrollbar styling for code blocks */
+.code-block-pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.code-block-pre::-webkit-scrollbar-track {
+  background: #1c1917;
+}
+
+.code-block-pre::-webkit-scrollbar-thumb {
+  background: #44403c;
+  border-radius: var(--radius-sm);
+}
+
+.code-block-pre::-webkit-scrollbar-thumb:hover {
+  background: #57534e;
+}
+
+/* Selection styling */
+.code-block-pre ::selection {
+  background-color: rgba(5, 150, 105, 0.4);
+  color: #fafaf9;
+}
+
+/* Light mode adjustments */
+:root:not(.dark) .code-block-wrapper {
+  background-color: #1c1917;
+  border-color: #292524;
+}
+
+:root:not(.dark) .code-block-header {
+  background-color: #292524;
+  border-color: #44403c;
+}
+
+:root:not(.dark) .code-block-pre {
+  background-color: #1c1917;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .code-block-pre {
+    scroll-behavior: auto;
+  }
+}

@@ -1,0 +1,76 @@
+.save-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.status-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.status-icon.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.status-icon.success {
+  color: var(--success);
+}
+
+.status-icon.error {
+  color: var(--error);
+}
+
+.status-saved {
+  color: var(--success);
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.status-saving {
+  color: var(--accent);
+  background-color: rgba(8, 145, 178, 0.1);
+}
+
+.status-error {
+  color: var(--error);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.status-text {
+  white-space: nowrap;
+}
+
+/* Dark mode adjustments */
+.dark .status-saved {
+  background-color: rgba(16, 185, 129, 0.15);
+}
+
+.dark .status-saving {
+  background-color: rgba(8, 145, 178, 0.15);
+}
+
+.dark .status-error {
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .status-icon.spinning {
+    animation: none;
+  }
+}
