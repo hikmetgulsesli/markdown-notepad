@@ -30,7 +30,7 @@ export function useLocalStorage({
   const [error, setError] = useState<string | null>(null)
   
   // Use a ref to track the timeout for debouncing
-  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   
   // Load from localStorage on mount
   useEffect(() => {

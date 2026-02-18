@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { FileText, Moon, Sun } from 'lucide-react'
 import { EditorLayout } from './components/EditorLayout'
-import { MarkdownEditor } from './components/MarkdownEditor'
+import { MarkdownEditor, type MarkdownEditorRef } from './components/MarkdownEditor'
 import { MarkdownPreview } from './components/MarkdownPreview'
 import { SaveStatusIndicator } from './components/SaveStatusIndicator'
+import { FormattingToolbar } from './components/FormattingToolbar'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import './App.css'
 
@@ -53,21 +54,74 @@ function App() {
     key: 'markdown-notepad-content',
     debounceMs: 400,
   })
-  const [editorScroll, setEditorScroll] = useState(0)
-  const [previewScroll, setPreviewScroll] = useState(0)
+  const [editorScroll] = useState(0)
+  const editorRef = useRef<MarkdownEditorRef>(null)
 
   const toggleTheme = () => {
     setIsDark(!isDark)
     document.documentElement.classList.toggle('dark')
   }
 
+  // Formatting handlers
+  const handleBold = useCallback(() => {
+    editorRef.current?.insertText('**', '**', 'bold text')
+  }, [])
+
+  const handleItalic = useCallback(() => {
+    editorRef.current?.insertText('*', '*', 'italic text')
+  }, [])
+
+  const handleHeading = useCallback(() => {
+    editorRef.current?.insertText('### ', '', 'Heading')
+  }, [])
+
+  const handleLink = useCallback(() => {
+    editorRef.current?.insertText('[', '](https://example.com)', 'link text')
+  }, [])
+
+  const handleCode = useCallback(() => {
+    const selection = editorRef.current?.getSelection()
+    if (selection && selection.text.includes('\n')) {
+      // Multi-line selection - use code block
+      editorRef.current?.insertText('```\n', '\n```', 'code')
+    } else {
+      // Single line or no selection - use inline code
+      editorRef.current?.insertText('`', '`', 'code')
+    }
+  }, [])
+
+  const handleList = useCallback(() => {
+    editorRef.current?.insertText('- ', '', 'list item')
+  }, [])
+
+  const handleOrderedList = useCallback(() => {
+    editorRef.current?.insertText('1. ', '', 'list item')
+  }, [])
+
+  const handleQuote = useCallback(() => {
+    editorRef.current?.insertText('> ', '', 'quote')
+  }, [])
+
   const editor = (
-    <MarkdownEditor
-      value={markdown}
-      onChange={setMarkdown}
-      placeholder={placeholderText}
-      aria-label="Markdown editor"
-    />
+    <div className="editor-wrapper">
+      <FormattingToolbar
+        onBold={handleBold}
+        onItalic={handleItalic}
+        onHeading={handleHeading}
+        onLink={handleLink}
+        onCode={handleCode}
+        onList={handleList}
+        onOrderedList={handleOrderedList}
+        onQuote={handleQuote}
+      />
+      <MarkdownEditor
+        ref={editorRef}
+        value={markdown}
+        onChange={setMarkdown}
+        placeholder={placeholderText}
+        aria-label="Markdown editor"
+      />
+    </div>
   )
 
   const preview = (

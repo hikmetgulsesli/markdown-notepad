@@ -44,7 +44,7 @@ describe('App', () => {
 
   it('renders resizable divider', () => {
     render(<App />)
-    const divider = screen.getByRole('separator')
+    const divider = screen.getByTestId('divider')
     expect(divider).toBeInTheDocument()
     expect(divider).toHaveAttribute('aria-orientation', 'vertical')
   })
@@ -53,6 +53,20 @@ describe('App', () => {
     render(<App />)
     const statusIndicator = screen.getByTestId('save-status-indicator')
     expect(statusIndicator).toBeInTheDocument()
+  })
+
+  it('renders formatting toolbar', () => {
+    render(<App />)
+    const toolbar = screen.getByTestId('formatting-toolbar')
+    expect(toolbar).toBeInTheDocument()
+    expect(screen.getByTestId('toolbar-bold')).toBeInTheDocument()
+    expect(screen.getByTestId('toolbar-italic')).toBeInTheDocument()
+    expect(screen.getByTestId('toolbar-heading')).toBeInTheDocument()
+    expect(screen.getByTestId('toolbar-link')).toBeInTheDocument()
+    expect(screen.getByTestId('toolbar-code')).toBeInTheDocument()
+    expect(screen.getByTestId('toolbar-list')).toBeInTheDocument()
+    expect(screen.getByTestId('toolbar-ordered-list')).toBeInTheDocument()
+    expect(screen.getByTestId('toolbar-quote')).toBeInTheDocument()
   })
 
   it('loads saved content from localStorage on mount', () => {

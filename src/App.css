@@ -74,6 +74,13 @@
   overflow: hidden;
 }
 
+.editor-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .header {
