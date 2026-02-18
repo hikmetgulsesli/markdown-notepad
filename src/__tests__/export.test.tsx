@@ -13,8 +13,8 @@ describe('Export Utils', () => {
     mockRevokeObjectURL = vi.fn()
 
     // Mock URL methods
-    ;(globalThis as typeof globalThis & { URL: typeof URL }).URL.createObjectURL = mockCreateObjectURL as unknown as typeof URL.createObjectURL
-    ;(globalThis as typeof globalThis & { URL: typeof URL }).URL.revokeObjectURL = mockRevokeObjectURL as unknown as typeof URL.revokeObjectURL
+    global.URL.createObjectURL = mockCreateObjectURL
+    global.URL.revokeObjectURL = mockRevokeObjectURL
 
     // Mock document.createElement and related methods
     const mockAnchor = {

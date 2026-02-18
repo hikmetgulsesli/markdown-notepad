@@ -16,6 +16,7 @@ interface MarkdownEditorProps {
   onBold?: () => void
   onItalic?: () => void
   onSave?: () => void
+  onScroll?: (scrollTop: number, scrollHeight: number, clientHeight: number) => void
 }
 
 export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(function MarkdownEditor({
@@ -27,6 +28,7 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
   onBold,
   onItalic,
   onSave,
+  onScroll,
 }, ref) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [isFocused, setIsFocused] = useState(false)
@@ -132,6 +134,7 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
         onFocus={handleFocus}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
+        onScroll={(e) => onScroll?.(e.currentTarget.scrollTop, e.currentTarget.scrollHeight, e.currentTarget.clientHeight)}
         placeholder={placeholder}
         disabled={disabled}
         aria-label={ariaLabel}

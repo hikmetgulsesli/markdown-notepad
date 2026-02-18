@@ -55,7 +55,7 @@ code block
 function App() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [documentToDelete, setDocumentToDelete] = useState<string | null>(null)
-  const [editorScroll] = useState(0)
+  const [editorScroll, setEditorScroll] = useState(0)
   const editorRef = useRef<MarkdownEditorRef>(null)
   
   const { isDark, toggleTheme } = useTheme()
@@ -183,6 +183,7 @@ function App() {
         onBold={handleBold}
         onItalic={handleItalic}
         onSave={handleManualSave}
+        onScroll={(scrollTop) => setEditorScroll(scrollTop)}
       />
     </div>
   )
@@ -219,7 +220,7 @@ function App() {
               {saveFeedback.message}
             </span>
           )}
-          <SaveStatusIndicator status={status === 'saving' ? 'saving' : status === 'error' ? 'error' : 'saved'} error={error} />
+          <SaveStatusIndicator status={status} error={error} />
         </div>
       </header>
       <main className="main">
