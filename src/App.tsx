@@ -1,49 +1,54 @@
 import { useState } from 'react'
 import { FileText, Moon, Sun } from 'lucide-react'
 import { EditorLayout } from './components/EditorLayout'
+import { MarkdownEditor } from './components/MarkdownEditor'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import './App.css'
 
-const defaultMarkdown = `# Welcome to Markdown Notepad
+const placeholderText = `# Welcome to Markdown Notepad
 
-Start typing in the **editor** on the left to see the live preview on the right.
+Start typing your markdown here...
 
-## Features
+## Quick Reference:
 
-- Live preview as you type
-- Syntax highlighting for code blocks
-- GitHub Flavored Markdown support
-- Local storage persistence
+# Heading 1
+## Heading 2
+### Heading 3
 
-## Code Example
+**Bold text**  
+*Italic text*  
+~~Strikethrough~~
 
-\`\`\`javascript
-function greet(name) {
-  return \`Hello, \${name}!\`;
-}
+- Bullet list item
+- Another item
+  - Nested item
 
-console.log(greet('World'));
+1. Numbered list
+2. Second item
+
+[Link text](https://example.com)
+
+\`inline code\`
+
+\`\`\`
+code block
 \`\`\`
 
-## Lists
+> Blockquote
 
-### Unordered
-- First item
-- Second item
-- Third item
+---
 
-### Ordered
-1. First step
-2. Second step
-3. Third step
+| Table | Column |
+|-------|--------|
+| Cell  | Cell   |
 
-> **Tip:** Drag the divider to resize the panes!
-`
+- [ ] Task item
+- [x] Completed task`
 
 function App() {
   const [isDark, setIsDark] = useState(false)
-  const [markdown, setMarkdown] = useState(defaultMarkdown)
+  const [markdown, setMarkdown] = useState('')
 
   const toggleTheme = () => {
     setIsDark(!isDark)
@@ -51,10 +56,10 @@ function App() {
   }
 
   const editor = (
-    <textarea
+    <MarkdownEditor
       value={markdown}
-      onChange={(e) => setMarkdown(e.target.value)}
-      placeholder="Type your markdown here..."
+      onChange={setMarkdown}
+      placeholder={placeholderText}
       aria-label="Markdown editor"
     />
   )
