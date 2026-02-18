@@ -9,6 +9,8 @@ import {
   Quote,
   FileDown,
   FileCode,
+  Sun,
+  Moon,
 } from 'lucide-react'
 import './FormattingToolbar.css'
 
@@ -23,6 +25,8 @@ export interface FormattingToolbarProps {
   onQuote: () => void
   onExportMarkdown?: () => void
   onExportHtml?: () => void
+  onToggleTheme?: () => void
+  isDark?: boolean
   disabled?: boolean
 }
 
@@ -37,6 +41,8 @@ export function FormattingToolbar({
   onQuote,
   onExportMarkdown,
   onExportHtml,
+  onToggleTheme,
+  isDark = false,
   disabled = false,
 }: FormattingToolbarProps) {
   return (
@@ -158,6 +164,22 @@ export function FormattingToolbar({
         data-testid="toolbar-export-html"
       >
         <FileDown className="toolbar-icon" aria-hidden="true" />
+      </button>
+      <div className="toolbar-divider toolbar-divider--spaced" role="separator" />
+      <button
+        type="button"
+        className="toolbar-button"
+        onClick={onToggleTheme}
+        disabled={disabled || !onToggleTheme}
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        data-testid="toolbar-theme-toggle"
+      >
+        {isDark ? (
+          <Sun className="toolbar-icon" aria-hidden="true" />
+        ) : (
+          <Moon className="toolbar-icon" aria-hidden="true" />
+        )}
       </button>
     </div>
   )

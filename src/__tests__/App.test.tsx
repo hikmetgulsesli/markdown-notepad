@@ -30,9 +30,9 @@ describe('App', () => {
     expect(screen.getByText('Preview')).toBeInTheDocument()
   })
 
-  it('renders theme toggle button', () => {
+  it('renders theme toggle button in toolbar', () => {
     render(<App />)
-    const themeToggle = screen.getByRole('button', { name: /switch to/i })
+    const themeToggle = screen.getByTestId('toolbar-theme-toggle')
     expect(themeToggle).toBeInTheDocument()
   })
 

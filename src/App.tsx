@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
-import { FileText, Moon, Sun } from 'lucide-react'
+import { FileText } from 'lucide-react'
 import { EditorLayout } from './components/EditorLayout'
 import { MarkdownEditor, type MarkdownEditorRef } from './components/MarkdownEditor'
 import { MarkdownPreview } from './components/MarkdownPreview'
@@ -8,6 +8,7 @@ import { FormattingToolbar } from './components/FormattingToolbar'
 import { DocumentManager } from './components/DocumentManager'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { useDocuments } from './hooks/useDocuments'
+import { useTheme } from './hooks/useTheme'
 import { exportAsMarkdown, exportAsHtml } from './utils/export'
 import './App.css'
 
@@ -52,11 +53,12 @@ code block
 - [x] Completed task`
 
 function App() {
-  const [isDark, setIsDark] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [documentToDelete, setDocumentToDelete] = useState<string | null>(null)
   const [editorScroll] = useState(0)
   const editorRef = useRef<MarkdownEditorRef>(null)
+  
+  const { isDark, toggleTheme } = useTheme()
   
   const {
     documents,
@@ -70,11 +72,6 @@ function App() {
     status,
     error,
   } = useDocuments({ debounceMs: 400 })
-
-  const toggleTheme = () => {
-    setIsDark(!isDark)
-    document.documentElement.classList.toggle('dark')
-  }
 
   // Handle document deletion with confirmation
   const handleDeleteRequest = useCallback((id: string) => {
@@ -167,6 +164,8 @@ function App() {
         onQuote={handleQuote}
         onExportMarkdown={handleExportMarkdown}
         onExportHtml={handleExportHtml}
+        onToggleTheme={toggleTheme}
+        isDark={isDark}
       />
       <MarkdownEditor
         ref={editorRef}
@@ -206,17 +205,6 @@ function App() {
         </div>
         <div className="header-actions">
           <SaveStatusIndicator status={status === 'saving' ? 'saving' : status === 'error' ? 'error' : 'saved'} error={error} />
-          <button
-            className="theme-toggle"
-            onClick={toggleTheme}
-            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
-            {isDark ? (
-              <Sun className="icon" aria-hidden="true" />
-            ) : (
-              <Moon className="icon" aria-hidden="true" />
-            )}
-          </button>
         </div>
       </header>
       <main className="main">
