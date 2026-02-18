@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { FileText, Moon, Sun } from 'lucide-react'
 import { EditorLayout } from './components/EditorLayout'
 import { MarkdownEditor } from './components/MarkdownEditor'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import { MarkdownPreview } from './components/MarkdownPreview'
 import './App.css'
 
 const placeholderText = `# Welcome to Markdown Notepad
@@ -49,6 +48,8 @@ code block
 function App() {
   const [isDark, setIsDark] = useState(false)
   const [markdown, setMarkdown] = useState('')
+  const [editorScroll, setEditorScroll] = useState(0)
+  const [previewScroll, setPreviewScroll] = useState(0)
 
   const toggleTheme = () => {
     setIsDark(!isDark)
@@ -65,9 +66,10 @@ function App() {
   )
 
   const preview = (
-    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-      {markdown}
-    </ReactMarkdown>
+    <MarkdownPreview 
+      content={markdown}
+      scrollPosition={editorScroll}
+    />
   )
 
   return (
