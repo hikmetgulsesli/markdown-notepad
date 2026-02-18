@@ -2,6 +2,15 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { MarkdownPreview } from '../components/MarkdownPreview'
 
+// Mock the CodeBlock component
+vi.mock('../components/CodeBlock', () => ({
+  CodeBlock: ({ children, className }: { children: string; className?: string }) => (
+    <div data-testid="code-block" className={className}>
+      <pre data-testid="code-pre">{children}</pre>
+    </div>
+  ),
+}))
+
 describe('MarkdownPreview', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -98,23 +107,30 @@ Second paragraph`} />)
       expect(code).toHaveClass('md-code-inline')
     })
 
-    it('renders code blocks', () => {
+    it('renders code blocks using CodeBlock component', () => {
       render(
         <MarkdownPreview content={"```\nconst x = 1\n```"} />
       )
-      // Code blocks are rendered in a pre element
-      const pre = document.querySelector('.md-pre')
-      expect(pre).toBeInTheDocument()
-      // The code inside should be found
-      expect(pre?.textContent).toContain('const x = 1')
+      expect(screen.getByTestId('code-block')).toBeInTheDocument()
+      expect(screen.getByTestId('code-pre')).toHaveTextContent('const x = 1')
     })
 
     it('renders syntax-highlighted code blocks with language', () => {
       render(
         <MarkdownPreview content={"```javascript\nconst x = 1\n```"} />
       )
-      const code = screen.getByText('const x = 1')
-      expect(code).toHaveClass('language-javascript')
+      const codeBlock = screen.getByTestId('code-block')
+      expect(codeBlock).toHaveClass('language-javascript')
+    })
+
+    it('renders code blocks with different languages', () => {
+      const { rerender } = render(
+        <MarkdownPreview content={"```python\nprint('hello')\n```"} />
+      )
+      expect(screen.getByTestId('code-block')).toHaveClass('language-python')
+
+      rerender(<MarkdownPreview content={"```css\n.class { color: red; }\n```"} />)
+      expect(screen.getByTestId('code-block')).toHaveClass('language-css')
     })
   })
 
@@ -317,10 +333,8 @@ console.log(greeting);
       
       expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Code Example')
       expect(screen.getByText('List item 1')).toBeInTheDocument()
-      // Code block content spans multiple lines
-      const pre = document.querySelector('.md-pre')
-      expect(pre).toBeInTheDocument()
-      expect(pre?.textContent).toContain('const greeting')
+      // Code block content should be rendered by CodeBlock component
+      expect(screen.getByTestId('code-block')).toBeInTheDocument()
       expect(screen.getByRole('link', { name: 'Read more' })).toBeInTheDocument()
       expect(screen.getAllByRole('checkbox')).toHaveLength(2)
     })

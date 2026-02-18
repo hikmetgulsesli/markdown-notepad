@@ -144,26 +144,6 @@
   font-variant-ligatures: none;
 }
 
-/* Code blocks */
-.markdown-preview .md-pre {
-  background-color: var(--surface-dark);
-  color: var(--text-inverse);
-  padding: var(--space-md);
-  border-radius: var(--radius-lg);
-  overflow-x: auto;
-  margin-bottom: var(--space-md);
-  font-family: 'JetBrains Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
-  font-size: var(--text-sm);
-  line-height: 1.6;
-}
-
-.markdown-preview .md-pre .md-code-block {
-  background-color: transparent;
-  color: inherit;
-  padding: 0;
-  font-size: inherit;
-}
-
 /* Blockquotes */
 .markdown-preview .md-blockquote {
   border-left: 4px solid var(--primary);
@@ -317,10 +297,6 @@
 }
 
 /* Dark mode adjustments */
-.dark .markdown-preview .md-pre {
-  background-color: #0f0f0f;
-}
-
 .dark .markdown-preview .md-code-inline {
   background-color: var(--surface-dark);
 }

@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { CodeBlock } from './CodeBlock'
 import './MarkdownPreview.css'
 
 interface MarkdownPreviewProps {
@@ -101,21 +102,30 @@ export function MarkdownPreview({ content, scrollPosition, onScroll }: MarkdownP
             li: ({ children, ...props }) => (
               <li className="md-li" {...props}>{children}</li>
             ),
-            // Custom code
+            // Custom code - use CodeBlock for blocks, inline for inline
             code: ({ children, className, ...props }) => {
-              const isInline = !className
+              const codeContent = String(children)
+              // Code blocks have newlines or language class, inline code doesn't
+              const isInline = !className && !codeContent.includes('\n')
+              
+              if (isInline) {
+                return (
+                  <code 
+                    className="md-code-inline" 
+                    {...props}
+                  >
+                    {children}
+                  </code>
+                )
+              }
+              // For code blocks, use the CodeBlock component
               return (
-                <code 
-                  className={`${isInline ? 'md-code-inline' : 'md-code-block'} ${className || ''}`} 
-                  {...props}
-                >
-                  {children}
-                </code>
+                <CodeBlock className={className}>
+                  {codeContent.replace(/\n$/, '')}
+                </CodeBlock>
               )
             },
-            pre: ({ children, ...props }) => (
-              <pre className="md-pre" {...props}>{children}</pre>
-            ),
+            pre: ({ children }) => <>{children}</>,
             // Custom blockquote
             blockquote: ({ children, ...props }) => (
               <blockquote className="md-blockquote" {...props}>{children}</blockquote>
