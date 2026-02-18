@@ -14,40 +14,56 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.25rem;
+  height: 2.25rem;
   padding: 0;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   border-radius: var(--radius-md);
   background-color: transparent;
   color: var(--text);
   cursor: pointer;
-  transition: background-color 150ms ease-out, border-color 150ms ease-out, transform 150ms ease-out;
+  /* Only animate transform and opacity for performance */
+  transition: background-color var(--transition-fast) ease-out, 
+              border-color var(--transition-fast) ease-out, 
+              transform 150ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow var(--transition-fast) ease-out;
+  position: relative;
 }
 
 .toolbar-button:hover:not(:disabled) {
   background-color: var(--surface-alt);
   border-color: var(--border);
+  transform: translateY(-1px);
 }
 
+/* Enhanced focus state */
 .toolbar-button:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-light);
 }
 
+/* Active state with scale animation */
 .toolbar-button:active:not(:disabled) {
-  transform: scale(0.95);
+  transform: scale(0.92);
 }
 
 .toolbar-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 .toolbar-icon {
   width: 1rem;
   height: 1rem;
   color: currentColor;
+  transition: transform var(--transition-fast) ease-out;
+}
+
+/* Subtle icon animation on hover */
+.toolbar-button:hover:not(:disabled) .toolbar-icon {
+  transform: scale(1.05);
 }
 
 .toolbar-divider {
@@ -55,6 +71,7 @@
   height: 1.25rem;
   background-color: var(--border);
   margin: 0 var(--space-xs);
+  transition: background-color var(--transition-fast);
 }
 
 .toolbar-divider--spaced {
@@ -71,9 +88,15 @@
   border-color: var(--border-dark);
 }
 
+.dark .toolbar-button:focus-visible {
+  box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.5);
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .toolbar-button {
+  .toolbar-button,
+  .toolbar-icon {
     transition: none;
+    transform: none !important;
   }
 }

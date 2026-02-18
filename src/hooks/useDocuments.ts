@@ -22,8 +22,10 @@ interface UseDocumentsResult {
   renameDocument: (id: string, newName: string) => void
   deleteDocument: (id: string) => void
   updateDocumentContent: (content: string) => void
+  saveNow: () => void
   status: DocumentsStatus
   error: string | null
+  saveFeedback: { show: boolean; message: string }
 }
 
 const STORAGE_KEY = 'markdown-notepad-documents'
@@ -55,6 +57,8 @@ export function useDocuments(options: UseDocumentsOptions = {}): UseDocumentsRes
   const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null)
   const [status, setStatus] = useState<DocumentsStatus>('saved')
   const [error, setError] = useState<string | null>(null)
+  
+  const [saveFeedback, setSaveFeedback] = useState<{ show: boolean; message: string }>({ show: false, message: '' })
   
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   
@@ -89,14 +93,14 @@ export function useDocuments(options: UseDocumentsOptions = {}): UseDocumentsRes
   }, [])
   
   // Save documents to localStorage with debounce
-  const saveDocuments = useCallback((docs: Document[]) => {
+  const saveDocuments = useCallback((docs: Document[], immediate = false) => {
     setStatus('saving')
     
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current)
     }
     
-    debounceTimeoutRef.current = setTimeout(() => {
+    const doSave = () => {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(docs))
         setStatus('saved')
@@ -110,7 +114,13 @@ export function useDocuments(options: UseDocumentsOptions = {}): UseDocumentsRes
         setStatus('error')
         console.error('Failed to save documents:', err)
       }
-    }, debounceMs)
+    }
+    
+    if (immediate) {
+      doSave()
+    } else {
+      debounceTimeoutRef.current = setTimeout(doSave, debounceMs)
+    }
   }, [debounceMs])
   
   // Cleanup timeout on unmount
@@ -178,6 +188,20 @@ export function useDocuments(options: UseDocumentsOptions = {}): UseDocumentsRes
     })
   }, [activeDocumentId, saveDocuments])
   
+  // Immediate save function for manual save (Ctrl+S)
+  const saveNow = useCallback(() => {
+    setDocuments(prev => {
+      saveDocuments(prev, true)
+      return prev
+    })
+    // Show feedback
+    setSaveFeedback({ show: true, message: 'Saved!' })
+    // Hide feedback after 2 seconds
+    setTimeout(() => {
+      setSaveFeedback({ show: false, message: '' })
+    }, 2000)
+  }, [saveDocuments])
+  
   const activeDocument = documents.find(doc => doc.id === activeDocumentId) || null
   
   return {
@@ -189,7 +213,9 @@ export function useDocuments(options: UseDocumentsOptions = {}): UseDocumentsRes
     renameDocument,
     deleteDocument,
     updateDocumentContent,
+    saveNow,
     status,
     error,
+    saveFeedback,
   }
 }

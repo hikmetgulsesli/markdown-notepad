@@ -13,6 +13,9 @@ interface MarkdownEditorProps {
   placeholder?: string
   disabled?: boolean
   'aria-label'?: string
+  onBold?: () => void
+  onItalic?: () => void
+  onSave?: () => void
 }
 
 export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(function MarkdownEditor({
@@ -21,6 +24,9 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
   placeholder,
   disabled = false,
   'aria-label': ariaLabel = 'Markdown editor',
+  onBold,
+  onItalic,
+  onSave,
 }, ref) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [isFocused, setIsFocused] = useState(false)
@@ -39,6 +45,33 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
   const handleBlur = useCallback(() => {
     setIsFocused(false)
   }, [])
+
+  // Keyboard shortcuts handler
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      // Ctrl/Cmd + B for bold
+      if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+        e.preventDefault()
+        onBold?.()
+        return
+      }
+
+      // Ctrl/Cmd + I for italic
+      if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
+        e.preventDefault()
+        onItalic?.()
+        return
+      }
+
+      // Ctrl/Cmd + S for save
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault()
+        onSave?.()
+        return
+      }
+    },
+    [onBold, onItalic, onSave]
+  )
 
   // Expose imperative methods via ref
   useImperativeHandle(ref, () => ({
@@ -98,6 +131,7 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
         onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
         placeholder={placeholder}
         disabled={disabled}
         aria-label={ariaLabel}

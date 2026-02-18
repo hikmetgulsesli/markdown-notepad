@@ -69,8 +69,10 @@ function App() {
     renameDocument,
     deleteDocument,
     updateDocumentContent,
+    saveNow,
     status,
     error,
+    saveFeedback,
   } = useDocuments({ debounceMs: 400 })
 
   // Handle document deletion with confirmation
@@ -100,6 +102,11 @@ function App() {
   const handleItalic = useCallback(() => {
     editorRef.current?.insertText('*', '*', 'italic text')
   }, [])
+  
+  // Manual save handler
+  const handleManualSave = useCallback(() => {
+    saveNow()
+  }, [saveNow])
 
   const handleHeading = useCallback(() => {
     editorRef.current?.insertText('### ', '', 'Heading')
@@ -173,6 +180,9 @@ function App() {
         onChange={updateDocumentContent}
         placeholder={placeholderText}
         aria-label="Markdown editor"
+        onBold={handleBold}
+        onItalic={handleItalic}
+        onSave={handleManualSave}
       />
     </div>
   )
@@ -204,6 +214,11 @@ function App() {
           />
         </div>
         <div className="header-actions">
+          {saveFeedback.show && (
+            <span className="save-feedback" role="status" aria-live="polite">
+              {saveFeedback.message}
+            </span>
+          )}
           <SaveStatusIndicator status={status === 'saving' ? 'saving' : status === 'error' ? 'error' : 'saved'} error={error} />
         </div>
       </header>

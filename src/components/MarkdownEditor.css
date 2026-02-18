@@ -17,7 +17,7 @@
   height: 100%;
   min-height: 300px;
   padding: var(--space-md);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: var(--radius-md);
   background-color: var(--surface);
   color: var(--text);
@@ -30,6 +30,9 @@
   flex: 1;
   tab-size: 2;
   -moz-tab-size: 2;
+  transition: border-color var(--transition-fast), 
+              box-shadow var(--transition-fast),
+              background-color var(--transition-fast);
 }
 
 .markdown-editor-textarea::placeholder {
@@ -38,9 +41,18 @@
   font-style: italic;
 }
 
+/* Enhanced focus state with visible ring */
 .markdown-editor-textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px var(--primary-light);
+  box-shadow: 0 0 0 3px var(--primary-light);
+  background-color: var(--surface-elevated);
+}
+
+/* Focus visible for keyboard navigation */
+.markdown-editor-textarea:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  border-color: var(--primary);
 }
 
 .markdown-editor.is-focused {
@@ -51,6 +63,8 @@
   background-color: var(--surface-alt);
   color: var(--text-muted);
   cursor: not-allowed;
+  border-color: var(--border);
+  box-shadow: none;
 }
 
 /* Selection styling */
@@ -78,6 +92,7 @@
 .markdown-editor-textarea::-webkit-scrollbar-thumb {
   background: var(--border-dark);
   border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
 }
 
 .markdown-editor-textarea::-webkit-scrollbar-thumb:hover {
@@ -93,6 +108,10 @@
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .markdown-editor-textarea {
+    transition: none;
+  }
+  
+  .markdown-editor-textarea::-webkit-scrollbar-thumb {
     transition: none;
   }
 }
