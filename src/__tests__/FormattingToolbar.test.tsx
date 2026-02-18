@@ -13,6 +13,8 @@ describe('FormattingToolbar', () => {
     onList: vi.fn(),
     onOrderedList: vi.fn(),
     onQuote: vi.fn(),
+    onExportMarkdown: vi.fn(),
+    onExportHtml: vi.fn(),
   }
 
   beforeEach(() => {
@@ -31,6 +33,8 @@ describe('FormattingToolbar', () => {
     expect(screen.getByTestId('toolbar-list')).toBeInTheDocument()
     expect(screen.getByTestId('toolbar-ordered-list')).toBeInTheDocument()
     expect(screen.getByTestId('toolbar-quote')).toBeInTheDocument()
+    expect(screen.getByTestId('toolbar-export-md')).toBeInTheDocument()
+    expect(screen.getByTestId('toolbar-export-html')).toBeInTheDocument()
   })
 
   it('has correct aria-labels for accessibility', () => {
@@ -44,6 +48,8 @@ describe('FormattingToolbar', () => {
     expect(screen.getByLabelText('Bullet list')).toBeInTheDocument()
     expect(screen.getByLabelText('Numbered list')).toBeInTheDocument()
     expect(screen.getByLabelText('Quote')).toBeInTheDocument()
+    expect(screen.getByLabelText('Export as Markdown')).toBeInTheDocument()
+    expect(screen.getByLabelText('Export as HTML')).toBeInTheDocument()
   })
 
   it('calls onBold when bold button is clicked', async () => {
@@ -121,6 +127,8 @@ describe('FormattingToolbar', () => {
     expect(screen.getByTestId('toolbar-list')).toBeDisabled()
     expect(screen.getByTestId('toolbar-ordered-list')).toBeDisabled()
     expect(screen.getByTestId('toolbar-quote')).toBeDisabled()
+    expect(screen.getByTestId('toolbar-export-md')).toBeDisabled()
+    expect(screen.getByTestId('toolbar-export-html')).toBeDisabled()
   })
 
   it('has toolbar role and correct aria-label', () => {
@@ -134,7 +142,7 @@ describe('FormattingToolbar', () => {
     render(<FormattingToolbar {...defaultProps} />)
 
     const separators = screen.getAllByRole('separator')
-    expect(separators).toHaveLength(2)
+    expect(separators).toHaveLength(3)
   })
 
   it('buttons have title attributes for tooltips', () => {
@@ -148,5 +156,40 @@ describe('FormattingToolbar', () => {
     expect(screen.getByTestId('toolbar-list')).toHaveAttribute('title', 'Bullet list')
     expect(screen.getByTestId('toolbar-ordered-list')).toHaveAttribute('title', 'Numbered list')
     expect(screen.getByTestId('toolbar-quote')).toHaveAttribute('title', 'Quote')
+    expect(screen.getByTestId('toolbar-export-md')).toHaveAttribute('title', 'Export as Markdown (.md)')
+    expect(screen.getByTestId('toolbar-export-html')).toHaveAttribute('title', 'Export as HTML (.html)')
+  })
+
+  it('calls onExportMarkdown when export markdown button is clicked', async () => {
+    const user = userEvent.setup()
+    render(<FormattingToolbar {...defaultProps} />)
+
+    await user.click(screen.getByTestId('toolbar-export-md'))
+    expect(defaultProps.onExportMarkdown).toHaveBeenCalledTimes(1)
+  })
+
+  it('calls onExportHtml when export HTML button is clicked', async () => {
+    const user = userEvent.setup()
+    render(<FormattingToolbar {...defaultProps} />)
+
+    await user.click(screen.getByTestId('toolbar-export-html'))
+    expect(defaultProps.onExportHtml).toHaveBeenCalledTimes(1)
+  })
+
+  it('disables export buttons when handlers are not provided', () => {
+    const propsWithoutExport = {
+      onBold: vi.fn(),
+      onItalic: vi.fn(),
+      onHeading: vi.fn(),
+      onLink: vi.fn(),
+      onCode: vi.fn(),
+      onList: vi.fn(),
+      onOrderedList: vi.fn(),
+      onQuote: vi.fn(),
+    }
+    render(<FormattingToolbar {...propsWithoutExport} />)
+
+    expect(screen.getByTestId('toolbar-export-md')).toBeDisabled()
+    expect(screen.getByTestId('toolbar-export-html')).toBeDisabled()
   })
 })

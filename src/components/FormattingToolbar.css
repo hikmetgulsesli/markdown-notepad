@@ -57,6 +57,10 @@
   margin: 0 var(--space-xs);
 }
 
+.toolbar-divider--spaced {
+  margin-left: auto;
+}
+
 /* Dark mode adjustments */
 .dark .formatting-toolbar {
   background-color: var(--surface-alt);

@@ -8,6 +8,7 @@ import { FormattingToolbar } from './components/FormattingToolbar'
 import { DocumentManager } from './components/DocumentManager'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { useDocuments } from './hooks/useDocuments'
+import { exportAsMarkdown, exportAsHtml } from './utils/export'
 import './App.css'
 
 const placeholderText = `# Welcome to Markdown Notepad
@@ -134,6 +135,25 @@ function App() {
     editorRef.current?.insertText('> ', '', 'quote')
   }, [])
 
+  // Export handlers
+  const handleExportMarkdown = useCallback(() => {
+    if (activeDocument) {
+      exportAsMarkdown({
+        content: activeDocument.content,
+        filename: activeDocument.name,
+      })
+    }
+  }, [activeDocument])
+
+  const handleExportHtml = useCallback(() => {
+    if (activeDocument) {
+      exportAsHtml({
+        content: activeDocument.content,
+        filename: activeDocument.name,
+      })
+    }
+  }, [activeDocument])
+
   const editor = (
     <div className="editor-wrapper">
       <FormattingToolbar
@@ -145,6 +165,8 @@ function App() {
         onList={handleList}
         onOrderedList={handleOrderedList}
         onQuote={handleQuote}
+        onExportMarkdown={handleExportMarkdown}
+        onExportHtml={handleExportHtml}
       />
       <MarkdownEditor
         ref={editorRef}

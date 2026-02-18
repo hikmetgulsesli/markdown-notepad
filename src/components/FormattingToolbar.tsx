@@ -6,7 +6,9 @@ import {
   Code, 
   List, 
   ListOrdered, 
-  Quote 
+  Quote,
+  FileDown,
+  FileCode,
 } from 'lucide-react'
 import './FormattingToolbar.css'
 
@@ -19,6 +21,8 @@ export interface FormattingToolbarProps {
   onList: () => void
   onOrderedList: () => void
   onQuote: () => void
+  onExportMarkdown?: () => void
+  onExportHtml?: () => void
   disabled?: boolean
 }
 
@@ -31,6 +35,8 @@ export function FormattingToolbar({
   onList,
   onOrderedList,
   onQuote,
+  onExportMarkdown,
+  onExportHtml,
   disabled = false,
 }: FormattingToolbarProps) {
   return (
@@ -129,6 +135,29 @@ export function FormattingToolbar({
         data-testid="toolbar-quote"
       >
         <Quote className="toolbar-icon" aria-hidden="true" />
+      </button>
+      <div className="toolbar-divider toolbar-divider--spaced" role="separator" />
+      <button
+        type="button"
+        className="toolbar-button"
+        onClick={onExportMarkdown}
+        disabled={disabled || !onExportMarkdown}
+        aria-label="Export as Markdown"
+        title="Export as Markdown (.md)"
+        data-testid="toolbar-export-md"
+      >
+        <FileCode className="toolbar-icon" aria-hidden="true" />
+      </button>
+      <button
+        type="button"
+        className="toolbar-button"
+        onClick={onExportHtml}
+        disabled={disabled || !onExportHtml}
+        aria-label="Export as HTML"
+        title="Export as HTML (.html)"
+        data-testid="toolbar-export-html"
+      >
+        <FileDown className="toolbar-icon" aria-hidden="true" />
       </button>
     </div>
   )
