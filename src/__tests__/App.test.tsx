@@ -70,13 +70,20 @@ describe('App', () => {
   })
 
   it('loads saved content from localStorage on mount', () => {
-    const savedContent = '# Previously saved markdown'
-    localStorage.setItem('markdown-notepad-content', savedContent)
+    const savedDocuments = [
+      {
+        id: 'test-doc-1',
+        name: 'Test Document',
+        content: '# Previously saved markdown',
+        updatedAt: Date.now()
+      }
+    ]
+    localStorage.setItem('markdown-notepad-documents', JSON.stringify(savedDocuments))
     
     render(<App />)
     
     const editor = screen.getByRole('textbox', { name: /markdown editor/i })
-    expect(editor).toHaveValue(savedContent)
+    expect(editor).toHaveValue('# Previously saved markdown')
   })
 
   it('handles localStorage errors gracefully', () => {

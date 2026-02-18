@@ -5,7 +5,9 @@ import { MarkdownEditor, type MarkdownEditorRef } from './components/MarkdownEdi
 import { MarkdownPreview } from './components/MarkdownPreview'
 import { SaveStatusIndicator } from './components/SaveStatusIndicator'
 import { FormattingToolbar } from './components/FormattingToolbar'
-import { useLocalStorage } from './hooks/useLocalStorage'
+import { DocumentManager } from './components/DocumentManager'
+import { ConfirmDialog } from './components/ConfirmDialog'
+import { useDocuments } from './hooks/useDocuments'
 import './App.css'
 
 const placeholderText = `# Welcome to Markdown Notepad
@@ -50,17 +52,47 @@ code block
 
 function App() {
   const [isDark, setIsDark] = useState(false)
-  const { value: markdown, setValue: setMarkdown, saveStatus, error: saveError } = useLocalStorage({
-    key: 'markdown-notepad-content',
-    debounceMs: 400,
-  })
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [documentToDelete, setDocumentToDelete] = useState<string | null>(null)
   const [editorScroll] = useState(0)
   const editorRef = useRef<MarkdownEditorRef>(null)
+  
+  const {
+    documents,
+    activeDocumentId,
+    activeDocument,
+    setActiveDocument,
+    createDocument,
+    renameDocument,
+    deleteDocument,
+    updateDocumentContent,
+    status,
+    error,
+  } = useDocuments({ debounceMs: 400 })
 
   const toggleTheme = () => {
     setIsDark(!isDark)
     document.documentElement.classList.toggle('dark')
   }
+
+  // Handle document deletion with confirmation
+  const handleDeleteRequest = useCallback((id: string) => {
+    setDocumentToDelete(id)
+    setShowDeleteConfirm(true)
+  }, [])
+
+  const handleConfirmDelete = useCallback(() => {
+    if (documentToDelete) {
+      deleteDocument(documentToDelete)
+    }
+    setShowDeleteConfirm(false)
+    setDocumentToDelete(null)
+  }, [documentToDelete, deleteDocument])
+
+  const handleCancelDelete = useCallback(() => {
+    setShowDeleteConfirm(false)
+    setDocumentToDelete(null)
+  }, [])
 
   // Formatting handlers
   const handleBold = useCallback(() => {
@@ -116,8 +148,8 @@ function App() {
       />
       <MarkdownEditor
         ref={editorRef}
-        value={markdown}
-        onChange={setMarkdown}
+        value={activeDocument?.content || ''}
+        onChange={updateDocumentContent}
         placeholder={placeholderText}
         aria-label="Markdown editor"
       />
@@ -126,7 +158,7 @@ function App() {
 
   const preview = (
     <MarkdownPreview 
-      content={markdown}
+      content={activeDocument?.content || ''}
       scrollPosition={editorScroll}
     />
   )
@@ -138,8 +170,20 @@ function App() {
           <FileText className="logo-icon" aria-hidden="true" />
           <h1>Markdown Notepad</h1>
         </div>
+        <div className="header-center">
+          <DocumentManager
+            documents={documents}
+            activeDocumentId={activeDocumentId}
+            status={status}
+            error={error}
+            onSelectDocument={setActiveDocument}
+            onCreateDocument={createDocument}
+            onRenameDocument={renameDocument}
+            onDeleteDocument={handleDeleteRequest}
+          />
+        </div>
         <div className="header-actions">
-          <SaveStatusIndicator status={saveStatus} error={saveError} />
+          <SaveStatusIndicator status={status === 'saving' ? 'saving' : status === 'error' ? 'error' : 'saved'} error={error} />
           <button
             className="theme-toggle"
             onClick={toggleTheme}
@@ -156,6 +200,16 @@ function App() {
       <main className="main">
         <EditorLayout editor={editor} preview={preview} />
       </main>
+      
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        title="Delete Document"
+        message="Are you sure you want to delete this document? This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </div>
   )
 }
