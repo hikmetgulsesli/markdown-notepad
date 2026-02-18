@@ -34,6 +34,12 @@
   color: var(--text);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
 .theme-toggle {
   display: flex;
   align-items: center;
@@ -74,5 +80,9 @@
     padding: var(--space-md);
     height: auto;
     min-height: 60px;
+  }
+  
+  .header-actions {
+    gap: var(--space-sm);
   }
 }

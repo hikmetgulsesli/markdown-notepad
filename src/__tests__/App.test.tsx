@@ -1,8 +1,16 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import App from '../App'
 
 describe('App', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
+  
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('renders the app title', () => {
     render(<App />)
     expect(screen.getByText('Markdown Notepad')).toBeInTheDocument()
@@ -39,5 +47,34 @@ describe('App', () => {
     const divider = screen.getByRole('separator')
     expect(divider).toBeInTheDocument()
     expect(divider).toHaveAttribute('aria-orientation', 'vertical')
+  })
+
+  it('renders save status indicator', () => {
+    render(<App />)
+    const statusIndicator = screen.getByTestId('save-status-indicator')
+    expect(statusIndicator).toBeInTheDocument()
+  })
+
+  it('loads saved content from localStorage on mount', () => {
+    const savedContent = '# Previously saved markdown'
+    localStorage.setItem('markdown-notepad-content', savedContent)
+    
+    render(<App />)
+    
+    const editor = screen.getByRole('textbox', { name: /markdown editor/i })
+    expect(editor).toHaveValue(savedContent)
+  })
+
+  it('handles localStorage errors gracefully', () => {
+    // Mock localStorage.getItem to throw error
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('Access denied')
+    })
+    
+    // Should not throw
+    expect(() => render(<App />)).not.toThrow()
+    
+    // App should still render
+    expect(screen.getByText('Markdown Notepad')).toBeInTheDocument()
   })
 })

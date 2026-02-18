@@ -3,6 +3,8 @@ import { FileText, Moon, Sun } from 'lucide-react'
 import { EditorLayout } from './components/EditorLayout'
 import { MarkdownEditor } from './components/MarkdownEditor'
 import { MarkdownPreview } from './components/MarkdownPreview'
+import { SaveStatusIndicator } from './components/SaveStatusIndicator'
+import { useLocalStorage } from './hooks/useLocalStorage'
 import './App.css'
 
 const placeholderText = `# Welcome to Markdown Notepad
@@ -47,7 +49,10 @@ code block
 
 function App() {
   const [isDark, setIsDark] = useState(false)
-  const [markdown, setMarkdown] = useState('')
+  const { value: markdown, setValue: setMarkdown, saveStatus, error: saveError } = useLocalStorage({
+    key: 'markdown-notepad-content',
+    debounceMs: 400,
+  })
   const [editorScroll, setEditorScroll] = useState(0)
   const [previewScroll, setPreviewScroll] = useState(0)
 
@@ -79,17 +84,20 @@ function App() {
           <FileText className="logo-icon" aria-hidden="true" />
           <h1>Markdown Notepad</h1>
         </div>
-        <button
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-        >
-          {isDark ? (
-            <Sun className="icon" aria-hidden="true" />
-          ) : (
-            <Moon className="icon" aria-hidden="true" />
-          )}
-        </button>
+        <div className="header-actions">
+          <SaveStatusIndicator status={saveStatus} error={saveError} />
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {isDark ? (
+              <Sun className="icon" aria-hidden="true" />
+            ) : (
+              <Moon className="icon" aria-hidden="true" />
+            )}
+          </button>
+        </div>
       </header>
       <main className="main">
         <EditorLayout editor={editor} preview={preview} />
